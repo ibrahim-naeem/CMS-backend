@@ -50,34 +50,16 @@ const addPersonalDetails = async (req, res) => {
     const user_id = req.user;
 
     //EMPLOYEE -USER
-    const user = await pool.query("SELECT * FROM users WHERE user_id = $1", [
-      user_id,
-    ]);
-    //DIRECTOR
-    const director = await pool.query(
-      "SELECT * FROM directors WHERE director_id = $1",
-      [user_id]
-    );
-    //MANAGER
-    const manager = await pool.query(
-      "SELECT * FROM managers WHERE manager_id = $1",
+    const user = await pool.query(
+      "SELECT * FROM cms_users WHERE user_id = $1",
       [user_id]
     );
 
     let name, email;
-
     if (user.rows.length !== 0) {
       const { user_name, user_email } = user.rows[0];
       name = user_name;
       email = user_email;
-    } else if (director.rows.length !== 0) {
-      const { director_name, director_email } = director.rows[0];
-      name = director_name;
-      email = director_email;
-    } else if (manager.rows.length !== 0) {
-      const { manager_name, manager_email } = manager.rows[0];
-      name = manager_name;
-      email = manager_email;
     }
 
     //checking if user Exist

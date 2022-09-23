@@ -62,6 +62,7 @@ const uploadImageToS3 = (req, res) => {
   });
 };
 
+// /user/getImagepath
 const getImagePathFromDB = async (req, res) => {
   try {
     const getImagePath = await pool.query(
@@ -75,11 +76,15 @@ const getImagePathFromDB = async (req, res) => {
   }
 };
 
-//S3 get aimeg route
+// /user/getImage/:id
+//S3 get image route
 const getS3ImagePath = (req, res) => {
   const key = req.params.id;
-  const readStream = getImage(key);
-  readStream.pipe(res);
+  if (key) {
+    const readStream = getImage(key);
+    readStream.pipe(res);
+    // console.log("getS3ImagePath", readStream.pipe(res));
+  }
 };
 
 module.exports = { uploadImageToS3, getImagePathFromDB, getS3ImagePath };

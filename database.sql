@@ -5,6 +5,36 @@ CREATE DATABASE cms;
 -->--  https://www.postgresql.org/docs/current/uuid-ossp.html 
 -->--  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+
+-- ROLES ---
+
+CREATE TABLE cms-users(
+    user_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    user_name VARCHAR(255) NOT NULL,
+    user_email VARCHAR(255) NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    role_id REFERENCES roles(user_role_id)
+);
+
+CREATE TABLE roles(
+    user_role_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    user_role VARCHAR(255) NOT NULL
+);
+
+select * from roles;
+
+Insert into roles (user_role) values ('Admin');
+Insert into roles (user_role) values ('Manager');
+Insert into roles (user_role) values ('Employee');
+
+select * from roles;
+
+delete from roles where user_role_id = '49d4144b-98df-420a-9bc2-cd09adcbb079';
+
+-- Roles ---
+
 CREATE TABLE users(
     user_id uuid PRIMARY KEY DEFAULT
     uuid_generate_v4(),
