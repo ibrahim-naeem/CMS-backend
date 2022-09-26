@@ -2,6 +2,8 @@ require("dotenv").config();
 const fs = require("fs");
 const S3 = require("aws-sdk/clients/s3");
 
+// const cognito = require("aws-sdk/clients/cognitoidentityserviceprovider")
+
 const bucketName = process.env.AWS_FILES_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
