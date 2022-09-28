@@ -1,26 +1,25 @@
 const pool = require("../db");
 const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
-
 const getUserRoles = async (req, res) => {
   try {
     const userRoles = await pool.query("SELECT * FROM roles");
     res.status(200).json(userRoles.rows);
   } catch (error) {
-    res.status(5000).json(error);
+    console.log(error);
+    // res.status(5000).json(error);
   }
 };
 
 const registerUser = async (req, res) => {
   try {
     // 1. Destructure the request body
-    const { username, email, roleId, password } = req.body;
+    const { username, email, role, password } = req.body;
     // 2. Check if the user does exists then throw error
 
-    const user = await pool.query(
-      "SELECT * FROM cms_users WHERE user_email = $1",
-      [email]
-    );
+    const user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+      email,
+    ]);
     if (user.rows.length !== 0) {
       res.status(401).send("User already exist");
     }
@@ -33,8 +32,8 @@ const registerUser = async (req, res) => {
     // 4. Enter a new user inside the database
 
     const newUser = await pool.query(
-      `INSERT INTO cms_users (user_name, user_email, user_password, role_id) VALUES ($1,$2,$3, $4) RETURNING *`,
-      [username, email, bcryptPassword, roleId]
+      `INSERT INTO users (user_name, user_email, user_password, user_role) VALUES ($1,$2,$3, $4) RETURNING *`,
+      [username, email, bcryptPassword, role]
     );
 
     //Generate the JWT token
@@ -52,10 +51,9 @@ const loginUser = async (req, res) => {
     // 1. Destructure the request body
     const { email, password } = req.body;
     // 2. Check if the user does exists if not then throw error
-    let user = await pool.query(
-      "SELECT * FROM cms_users WHERE user_email = $1",
-      [email]
-    );
+    let user = await pool.query("SELECT * FROM users WHERE user_email = $1", [
+      email,
+    ]);
 
     // if (user.rows.length === 0) {
     //   res.status(401).json(`No user found with this ${email} email!!`);

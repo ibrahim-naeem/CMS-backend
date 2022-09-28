@@ -61,8 +61,9 @@ function initAWS(
 }
 
 function decodeJWTToken(token) {
-  const { email, exp, auth_time, token_use, username } = jwt_decode(token);
-  return { email, exp, auth_time, token_use, username };
+  const { username } = jwt_decode(token);
+  let user_uid = username;
+  return { user_uid };
 }
 
 module.exports = {

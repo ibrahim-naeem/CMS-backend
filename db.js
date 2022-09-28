@@ -1,8 +1,9 @@
 require("dotenv").config();
 
-const accessKeyId = process.env.AWS_RDS_KEY_ID;
-const secretAccessKey = process.env.AWS_RDS_KEY;
-const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
+
+const region = process.env.AWS_REGION;
 const hostname = process.env.AWS_RDS_HOST_NAME;
 const port = process.env.AWS_RDS_PORT;
 const username = process.env.AWS_RDS_DB_USERNAME;
@@ -24,7 +25,6 @@ const signerOptions = {
 };
 
 const signer = new RDS.Signer();
-// const getPassword = () => signer.getAuthToken(signerOptions);
 
 const pool = new Pool({
   host: signerOptions.hostname,

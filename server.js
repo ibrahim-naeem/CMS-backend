@@ -7,7 +7,7 @@ const cognitoAuth = require("./Router/cognitoAuth");
 require("dotenv").config();
 
 const Port = process.env.PORT;
-app.use(express.static("pulib/uploads"));
+// app.use(express.static("pulib/uploads"));
 
 //middleware
 app.use(express.json());

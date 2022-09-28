@@ -6,8 +6,8 @@ const {
   signOut,
 } = require("../Controllers/authCognitoController");
 
-router.get("/signup", signUp);
-router.get("/verify", verify);
+router.post("/signup", signUp);
+router.post("/verify", verify);
 router.get("/signin", signIn);
 router.get("/signout", signOut);
 

@@ -1,6 +1,6 @@
-const { uploadImage, getImage } = require("../S3/s3-imageUpload");
 const pool = require("../db");
 const multer = require("multer");
+const { uploadImage, getImage } = require("../AWS/S3/s3-imageUpload");
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {

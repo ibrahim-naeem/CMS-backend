@@ -2,11 +2,9 @@ require("dotenv").config();
 const fs = require("fs");
 const S3 = require("aws-sdk/clients/s3");
 
-// const cognito = require("aws-sdk/clients/cognitoidentityserviceprovider")
-
-const bucketName = process.env.AWS_FILES_BUCKET_NAME;
-const region = process.env.AWS_BUCKET_REGION;
-const accessKeyId = process.env.AWS_ACCESS_KEY;
+const bucketName = process.env.AWS_IMAGES_BUCKET_NAME;
+const region = process.env.AWS_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_KEY;
 
 const s3 = new S3({
@@ -17,7 +15,7 @@ const s3 = new S3({
 
 //upload image to s3
 
-const uploadFileToS3 = (file) => {
+const uploadImage = (file) => {
   const fileStream = fs.createReadStream(file.path);
 
   const uploadParams = {
@@ -29,7 +27,7 @@ const uploadFileToS3 = (file) => {
   return s3.upload(uploadParams).promise();
 };
 
-const getFileFromS3 = (fileKey) => {
+const getImage = (fileKey) => {
   const downloadParams = {
     Key: fileKey,
     Bucket: bucketName,
@@ -38,6 +36,6 @@ const getFileFromS3 = (fileKey) => {
   return s3.getObject(downloadParams).createReadStream();
 };
 module.exports = {
-  uploadFileToS3,
-  getFileFromS3,
+  uploadImage,
+  getImage,
 };

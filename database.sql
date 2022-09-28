@@ -3,24 +3,20 @@ CREATE DATABASE cms;
 
 -->--  DOWNLOAD EXTENSION FOR UUID
 -->--  https://www.postgresql.org/docs/current/uuid-ossp.html 
--->--  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- ROLES ---
-
-CREATE TABLE cms-users(
-    user_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
+CREATE TABLE users(
+    user_id SERIAL PRIMARY KEY not NULL,
     user_name VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
     user_password VARCHAR(255) NOT NULL,
-    role_id REFERENCES roles(user_role_id)
+    user_role VARCHAR REFERENCES roles(role)
 );
 
 CREATE TABLE roles(
-    user_role_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
-    user_role VARCHAR(255) NOT NULL
+   role_id SERIAL ,
+   role VARCHAR primary KEY
 );
 
 select * from roles;
@@ -29,37 +25,7 @@ Insert into roles (user_role) values ('Admin');
 Insert into roles (user_role) values ('Manager');
 Insert into roles (user_role) values ('Employee');
 
-select * from roles;
 
-delete from roles where user_role_id = '49d4144b-98df-420a-9bc2-cd09adcbb079';
-
--- Roles ---
-
-CREATE TABLE users(
-    user_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
-    user_name VARCHAR(255) NOT NULL,
-    user_email VARCHAR(255) NOT NULL,
-    user_password VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE directors(
-    director_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
-    director_name VARCHAR(255) NOT NULL,
-    director_email VARCHAR(255) NOT NULL,
-    director_password VARCHAR(255) NOT NULL,
-    managers  VARCHAR(255)[]
-);
-
-CREATE TABLE managers(
-    manager_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
-    manager_name VARCHAR(255) NOT NULL,
-    manager_email VARCHAR(255) NOT NULL,
-    manager_password VARCHAR(255) NOT NULL,
-    employees  VARCHAR(255)[]
-);
 
 SELECT * FROM users;
 
@@ -93,6 +59,7 @@ INSERT INTO user_details (user_id, user_name, user_email, user_status, date_of_b
  martial, shift_type, education, family, emplymeents, awards) 
  VALUES ( '8ebdc51e-3ac8-494a-b5ea-49edc3c53a51', 'visionx', 'visionx@test.com', 'single', '2022-08-31', '2022-08-16', '2022-08-31', 'male', 'single', 'morning', 'bscs', 'family', 'employment', 'awards' );
 
+-- Software development & Ambassador cars
 -- user_id , 
 -- user_status, 
 -- date_of_birth, 
@@ -196,18 +163,6 @@ CREATE TABLE images (
     image_path VARCHAR(255) NOT NULL,
     image_type VARCHAR(255) NOT NULL
 );
-
-
-
--- CREATE TABLE files ( 
---     file_id uuid PRIMARY KEY DEFAULT
---     uuid_generate_v4(),
---     user_id  VARCHAR(255) NOT NULL,
---     file_path VARCHAR(255)[] NOT NULL,
---     file_type VARCHAR(255)[] NOT NULL
--- );
-
-
 
 CREATE TABLE files ( 
     file_id uuid PRIMARY KEY DEFAULT

@@ -2,7 +2,10 @@ const AwsConfig = require("../AWS/Cognito/cognitoConfig");
 
 const signUp = async (req, res) => {
   try {
-    const { email, password, role_id } = req.body;
+    const { username, email, role, password } = req.body;
+
+    console.log(username, email, role, password);
+
     agent = "none";
     AwsConfig.initAWS();
     AwsConfig.setCognitoAttributeList(email, agent);
@@ -13,14 +16,14 @@ const signUp = async (req, res) => {
       null,
       (err, result) => {
         if (err) {
-          return res.json({ statusCode: 422, response: err });
+          return res.json(err);
         }
-        const response = {
+
+        return res.status(201).json({
           username: result.user.getUsername(),
           userConfirmed: result.userConfirmed,
-          userAgent: result.user.client.userAgent,
-        };
-        return res.json({ statusCode: 201, response: response });
+          message: `Verification Code sent on this ${result.user.getUsername()} email.`,
+        });
       }
     );
   } catch (error) {
@@ -30,15 +33,17 @@ const signUp = async (req, res) => {
 
 const verify = async (req, res) => {
   try {
-    const { email, code } = req.body;
+    const { email, verifiactionCode } = req.body;
     AwsConfig.getCognitoUser(email).confirmRegistration(
-      code,
+      verifiactionCode,
       true,
       (err, result) => {
         if (err) {
           return res.json({ statusCode: 422, response: err });
         }
-        return res.json({ statusCode: 400, response: result });
+        return res
+          .status(200)
+          .json({ message: "Email Verified", response: result });
       }
     );
   } catch (error) {
@@ -49,15 +54,18 @@ const verify = async (req, res) => {
 const signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
+    let data = AwsConfig.getCognitoUser(email);
     AwsConfig.getCognitoUser(email).authenticateUser(
       AwsConfig.getAuthDetails(email, password),
       {
         onSuccess: (result) => {
           const token = result.getAccessToken().getJwtToken();
+          const uid = AwsConfig.decodeJWTToken(token);
 
-          return res.json({
-            statusCode: 200,
-            response: AwsConfig.decodeJWTToken(token),
+          return res.status(200).json({
+            uid,
+            email: data.username,
+            token,
           });
         },
 
@@ -75,10 +83,11 @@ const signIn = async (req, res) => {
 };
 
 const signOut = async (req, res) => {
+  const { email } = req.body;
   try {
-    let cognitoUser = AwsConfig.getUserPool().getCurrentUser();
-    // cognitoUser.signOut();
-    res.json(cognitoUser);
+    let data = AwsConfig.getCognitoUser(email);
+
+    // res.json(data. .signOut());
   } catch (error) {
     console.log(error);
   }
