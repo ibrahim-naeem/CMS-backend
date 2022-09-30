@@ -1,4 +1,5 @@
 const pool = require("../db");
+
 // http://localhost:5000/user/getAllTrainings
 const getAllTrainings = async (req, res) => {
   try {
@@ -60,7 +61,6 @@ const addTraining = async (req, res) => {
           });
         }
       });
-      // console.log(trainingName, req.user, "after not traingin found<=");
     }
     if (isTrainingExist) {
       if (isUserExist) {

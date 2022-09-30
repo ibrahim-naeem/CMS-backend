@@ -8,7 +8,7 @@ const {
 
 router.post("/signup", signUp);
 router.post("/verify", verify);
-router.get("/signin", signIn);
+router.post("/signin", signIn);
 router.get("/signout", signOut);
 
 module.exports = router;
