@@ -1,7 +1,7 @@
 const pool = require("../db");
 const multer = require("multer");
 const path = require("path");
-const { uploadFileToS3 } = require("../S3/s3-fileUpload");
+const { uploadFileToS3 } = require("../AWS/S3/s3-fileUpload");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {

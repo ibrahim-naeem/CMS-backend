@@ -50,10 +50,9 @@ const addPersonalDetails = async (req, res) => {
     const user_id = req.user;
 
     //EMPLOYEE -USER
-    const user = await pool.query(
-      "SELECT * FROM cms_users WHERE user_id = $1",
-      [user_id]
-    );
+    const user = await pool.query("SELECT * FROM users WHERE user_id = $1", [
+      user_id,
+    ]);
 
     let name, email;
     if (user.rows.length !== 0) {
