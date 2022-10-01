@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const validInfo = require("../middleware/validInfo");
+const validInfo = require("./validInfo");
 const {
   registerUser,
   loginUser,

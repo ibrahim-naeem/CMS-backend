@@ -2,6 +2,16 @@ const pool = require("../db");
 const bcrypt = require("bcrypt");
 const AwsConfig = require("../AWS/Cognito/cognitoConfig");
 
+const getUserRoles = async (req, res) => {
+  try {
+    const userRoles = await pool.query("SELECT * FROM roles");
+    res.status(200).json(userRoles.rows);
+  } catch (error) {
+    console.log(error);
+    // res.status(5000).json(error);
+  }
+};
+
 const saveRegisterUserDataToDB = async (username, email, password, role) => {
   try {
     const user = await pool.query(
@@ -154,6 +164,7 @@ const signOut = async (req, res) => {
 };
 
 module.exports = {
+  getUserRoles,
   signUp,
   verify,
   signIn,
