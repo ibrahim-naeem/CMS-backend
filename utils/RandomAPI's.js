@@ -1,55 +1,3 @@
-const router = require("express").Router();
-const pool = require("../db");
-const authorization = require("../middleware/authorization");
-
-//Controllers
-const {
-  uploadFile,
-  getFiles,
-  deleteFiles,
-  downloadFile,
-} = require("../Controllers/fileController");
-const {
-  uploadImageToS3,
-  getS3ImagePath,
-  getImagePathFromDB,
-} = require("../Controllers/ImageController");
-const {
-  getAllTrainings,
-  getUserSpecificTrainings,
-  addTraining,
-  deleteTraining,
-} = require("../Controllers/trainingController");
-const {
-  getUserName,
-  getPersonalDetails,
-  addPersonalDetails,
-} = require("../Controllers/userDetailsController");
-const {
-  deleteSkill,
-  addNewSkill,
-  getUserSpecificSkills,
-  getAllSkills,
-} = require("../Controllers/skilldController");
-const {
-  deleteLeave,
-  addNewLeave,
-  getUserSpecificLeaves,
-  getAllLeaves,
-} = require("../Controllers/leavesController");
-
-//GET user mini details
-// http://localhost:5000/user/
-router.get("/", authorization, getUserName);
-
-//GET user fulll details
-// http://localhost:5000/user/personalDetails
-router.get("/personalDetails", authorization, getPersonalDetails);
-
-//POST user fulll details
-// http://localhost:5000/user/personalDetails
-router.post("/personalDetails", authorization, addPersonalDetails);
-
 //DIRECTOR
 // GET All director details
 // http://localhost:5000/user/getAlldirector
@@ -169,22 +117,6 @@ router.delete("/manager/:id", authorization, async (req, res) => {
   }
 });
 
-// SkillSets
-// GET All skillset details
-// http://localhost:5000/user/getAllskillsets
-router.get("/getAllskillsets", authorization, getAllSkills);
-
-//GET skills details
-// http://localhost:5000/user/skills
-router.get("/skills", authorization, getUserSpecificSkills);
-
-// http://localhost:5000/user/skill
-router.post("/skill", authorization, addNewSkill);
-
-// DELETE skills details
-// http://localhost:5000/user/trainings/:id
-router.delete("/skills/:id", deleteSkill);
-
 //PROJECTS
 // GET All project details
 // http://localhost:5000/user/getAllprojects
@@ -250,54 +182,3 @@ router.delete("/project/:id", authorization, async (req, res) => {
     console.error(error);
   }
 });
-
-//LEAVES
-// GET All leave details
-// http://localhost:5000/user/getAllleaves
-router.get("/getAllleaves", authorization, getAllLeaves);
-
-//GET leaves details
-// http://localhost:5000/user/leave
-router.get("/leave", authorization, getUserSpecificLeaves);
-
-// http://localhost:5000/user/leave
-router.post("/leave", authorization, addNewLeave);
-
-// DELETE leave details
-// http://localhost:5000/user/trainings/:id
-router.delete("/leave/:id", authorization, deleteLeave);
-
-// TRAININGS
-// GET All trainings details
-// http://localhost:5000/user/getAllTrainings
-router.get("/getAllTrainings", authorization, getAllTrainings);
-
-// GET trainings details BY userID
-// http://localhost:5000/user/trainings
-router.get("/trainings", authorization, getUserSpecificTrainings);
-
-// http://localhost:5000/user/trainings
-router.post("/trainings", authorization, addTraining);
-
-// DELETE trainings details
-// http://localhost:5000/user/trainings/:id
-router.delete("/trainings/:id", authorization, deleteTraining);
-
-// FILE ROUTE START
-//POST file details in Database
-// http://localhost:5000/user/uploadFile
-router.post("/uploadFile", authorization, uploadFile);
-router.get("/getFiles", authorization, getFiles);
-
-// http://localhost:5000/user/deleteFiles/:id
-router.delete("/deleteFiles/:id", authorization, deleteFiles);
-router.get("/downloadFile/:id", authorization, downloadFile);
-
-// FILE ROUTE END
-
-//IMAGE ROUTES ---##3---
-router.post("/uploadImage", authorization, uploadImageToS3);
-router.get("/getImagepath", authorization, getImagePathFromDB);
-router.get("/getImage/:id", getS3ImagePath);
-
-module.exports = router;

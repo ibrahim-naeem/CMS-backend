@@ -99,9 +99,15 @@ const addNewSkill = async (req, res) => {
 const deleteSkill = async (req, res) => {
   try {
     const { id } = req.params;
-    const query = await pool.query("DELETE FROM skills WHERE skill_id  = $1", [
-      id,
-    ]);
+
+    console.log("ID", id);
+    console.log("Req USER", req.user);
+
+    const query = await pool.query(
+      "UPDATE skills SET employees = array_remove(employees, $1) WHERE skill_id = $2",
+      [req.user, id]
+    );
+
     res
       .status(200)
       .json({ message: `Skill with id ${id} deleted successfully!!` });

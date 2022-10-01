@@ -97,10 +97,12 @@ const addTraining = async (req, res) => {
 const deleteTraining = async (req, res) => {
   try {
     const { id } = req.params;
+
     const query = await pool.query(
-      "DELETE FROM trainings WHERE training_id  = $1",
-      [id]
+      "UPDATE trainings SET employees = array_remove(employees, $1) WHERE training_id = $2",
+      [req.user, id]
     );
+
     res
       .status(200)
       .json({ message: `Training with id ${id} deleted successfully!!` });
