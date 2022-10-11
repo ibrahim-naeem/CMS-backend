@@ -8,7 +8,7 @@ const {
 } = require("../Controllers/authCognitoController");
 
 //ROLES
-// ROUTE => http://localhost:5000/auth/roles
+// ROUTE => // http://localhost:5000/cognito/roles
 router.get("/roles", getUserRoles);
 router.post("/signup", signUp);
 router.post("/verify", verify);
