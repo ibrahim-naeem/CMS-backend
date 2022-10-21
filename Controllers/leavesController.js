@@ -1,8 +1,10 @@
 const pool = require("../db");
-
+const moment = require("moment");
+console;
 //LEAVES
 // GET All leave details
 // http://localhost:5000/user/getAllleaves
+
 const getAllLeaves = async (req, res) => {
   try {
     const leave = await pool.query("SELECT * FROM leave");
@@ -42,34 +44,37 @@ const addNewLeave = async (req, res) => {
     const gettingAllLeave = await pool.query("SELECT * FROM leave");
 
     let updateLeave = false;
+    let leaveForUpdateID;
 
     if (gettingAllLeave.rows.length !== 0) {
-      console.log(gettingAllLeave.rows);
       gettingAllLeave.rows.map((leave) => {
-        let test = new Date(leave.created_at).toDateString();
-        console.log(test, "--", leave.created_at, "--", date);
-        if (test == date) {
+        let createdAt = moment
+          .utc(leave.created_at)
+          .local()
+          .format("YYYY-MM-DD");
+
+        if (createdAt == date) {
           updateLeave = true;
+          leaveForUpdateID = leave.leave_id;
         }
       });
     }
 
-    console.log(updateLeave);
-    // if (updateLeave) {
-    //   const query = pool.query(
-    //     "Update leave SET status = $1 , created_At = $2 WHERE user_id = $3",
-    //     [leaveStatus, date, req.user]
-    //   );
-    // } else {
-    //   //add training and add user
-    //   const query = await pool.query(
-    //     "INSERT INTO leave (user_id, status, created_At) VALUES ($1,$2,$3) RETURNING *",
-    //     [req.user, leaveStatus, date]
-    //   );
-    //   res.status(200).json({
-    //     msg: "New Leave Added to DB",
-    //   });
-    // }
+    if (updateLeave) {
+      const query = pool.query(
+        "Update leave SET status = $1 , created_At = $2, user_id = $3 WHERE leave_id = $4",
+        [leaveStatus, date, req.user, leaveForUpdateID]
+      );
+    } else {
+      //add training and add user
+      const query = await pool.query(
+        "INSERT INTO leave (user_id, status, created_At) VALUES ($1,$2,$3) RETURNING *",
+        [req.user, leaveStatus, date]
+      );
+      res.status(200).json({
+        msg: "New Leave Added to DB",
+      });
+    }
   } catch (error) {
     console.error(error);
   }
