@@ -1,8 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .env
-/docker-container.sh
-/docker-image.sh
+docker-container.sh
+docker-image.sh
 
 # dependencies
 /node_modules
