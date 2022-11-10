@@ -6,6 +6,7 @@ const getUserRoles = async (req, res) => {
   try {
     const userRoles = await pool.query("SELECT * FROM roles");
     res.status(200).json(userRoles.rows);
+    // await pool.end()
   } catch (error) {
     console.log(error);
     // res.status(5000).json(error);
@@ -51,10 +52,10 @@ const signUp = async (req, res) => {
       null,
       async (err, result) => {
         if (err) {
-          return res.json(err);
+          return res.status(400).json(err);
         }
         await saveRegisterUserDataToDB(username, email, password, role);
-        return res.status(201).json({
+        return res.status(200).json({
           username: result.user.getUsername(),
           userConfirmed: result.userConfirmed,
           message: `Verification Code sent on this ${result.user.getUsername()} email.`,
@@ -88,9 +89,7 @@ const verify = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email, password);
-
+  // console.log(email, password);
   try {
     let data = AwsConfig.getCognitoUser(email);
     AwsConfig.getCognitoUser(email).authenticateUser(
@@ -99,16 +98,13 @@ const signIn = async (req, res) => {
         onSuccess: async (result) => {
           const token = result.getAccessToken().getJwtToken();
           const uid = AwsConfig.decodeJWTToken(token);
-
           await saveVerifiedUserDataToDB(email, uid.user_uid);
-
           return res.status(200).json({
             uid,
             email: data.username,
             token,
           });
         },
-
         onFailure: (err) => {
           return res.json({
             statusCode: 400,
