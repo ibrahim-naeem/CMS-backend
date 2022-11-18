@@ -1,8 +1,14 @@
 const request = require('supertest')
 const app = require('../app')
 
+// jest-express
+const  { Request } = require( 'jest-express/lib/request')
+
+jest.mock('../middleware/authorization')
+// const middleware = require('../middleware/authorization');
+
 // /roles
-describe("GET /cognito/roles",  ()=>{
+describe("GET /cognito",  ()=>{
   let response;
     beforeEach( async()=>{
         response = await request(app).get('/cognito/roles')
@@ -23,11 +29,9 @@ describe("GET /cognito/signup",  ()=>{
     beforeEach( async()=>{
           response = await request(app).post('/cognito/signup').send({
             "username": "qzwxecrvtbynumikolp",
-    "email": "qzwxecrvtbynumikolp@botsoko.com",
-    "role": "Admin",
-    "password":"Admin_12345"
-
-            
+            "email": "qzwxecrvtbynumikolp@botsoko.com",
+            "role": "Admin",
+            "password":"Admin_12345"
           })
       })   
 
@@ -59,6 +63,7 @@ describe("GET /cognito/signup",  ()=>{
 })
 
 // /signin
+let token;
 describe("GET /cognito/signin", ()=>{
     let response;
     beforeEach( async()=>{
@@ -77,6 +82,9 @@ describe("GET /cognito/signin", ()=>{
     })
 
     test("Method should be jwt token in return", async()=>{
+        token = response.body['token']
+        // token = response.body
+        console.log(token)   
         expect(response.body['uid']).toBeDefined()
     })
 
@@ -96,3 +104,22 @@ describe("GET /cognito/signin", ()=>{
     })
     
 })
+
+describe("GET /user",  ()=>{
+    let response;
+      beforeEach(async()=>{
+         response = new Request('http://localhost:5000/user/',{
+            headers:{
+                token
+            }
+        });
+      })
+     
+      test("Should respond with USERNAME ", async()=>{
+        expect(response).toBe('ibrahim')       
+      })
+})
+
+
+
+
